@@ -72,8 +72,8 @@ func CreateCampaign(w http.ResponseWriter, r *http.Request) {
 	db := db.GetDbConnection()
 
 	result, err := db.CreateCampaign(r.Context(), database.CreateCampaignParams{
-		UpdatedAt: time.Now().Local(),
-		CreatedAt: time.Now().Local(),
+		UpdatedAt: time.Now().UTC(),
+		CreatedAt: time.Now().UTC(),
 		Name:      newCampaign.Name,
 	})
 
@@ -120,7 +120,7 @@ func UpdateCampaign(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := db.UpdateCampaign(r.Context(), database.UpdateCampaignParams{
+	_, err = db.UpdateCampaign(r.Context(), database.UpdateCampaignParams{
 		Name:      editedCampaign.Name,
 		UpdatedAt: time.Now().Local(),
 		ID:        int32(id),
@@ -131,9 +131,7 @@ func UpdateCampaign(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	lastInsertId, _ := result.LastInsertId()
-
-	campaign, err := db.GetOneCampaign(r.Context(), int32(lastInsertId))
+	campaign, err := db.GetOneCampaign(r.Context(), int32(id))
 	if err != nil {
 		http.Error(w, "Erreur lors de la récupération de la campagne modifiée :"+err.Error(), http.StatusInternalServerError)
 		return
@@ -146,7 +144,7 @@ func UpdateCampaign(w http.ResponseWriter, r *http.Request) {
 func DeleteCampaign(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
-		http.Error(w, "%v n'est pas reconnu", http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("%v n'est pas reconnu", id), http.StatusBadRequest)
 		return
 	}
 
@@ -154,6 +152,7 @@ func DeleteCampaign(w http.ResponseWriter, r *http.Request) {
 
 	err = db.DeleteCampaign(r.Context(), int32(id))
 	if err != nil {
+		fmt.Println(err)
 		http.Error(w, "Suppression de la campagne impossible :"+err.Error(), http.StatusInternalServerError)
 		return
 	}

@@ -7,6 +7,7 @@ import (
 
 	db "github.com/Nearrivers/DND-quest-tracker/sql"
 	"github.com/Nearrivers/DND-quest-tracker/src/api/campaign"
+	"github.com/Nearrivers/DND-quest-tracker/src/middleware"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
@@ -42,6 +43,8 @@ func main() {
 		AllowCredentials: false,
 		MaxAge:           300,
 	}))
+
+	router.Use(middleware.Logger)
 
 	router.Mount("/", filesRouter)
 	router.Mount("/campaigns", campaignRouter)
