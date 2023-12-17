@@ -1,0 +1,26 @@
+{
+  "name": "dnd-quest-journal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.go",
+  "scripts": {
+    "style": "npx tailwindcss -i ./styles/input.css -o ./styles/output.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nearrivers/DND-Quest-Journal.git"
+  },
+  "keywords": [
+    "DND"
+  ],
+  "author": "Nearrivers",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Nearrivers/DND-Quest-Journal/issues"
+  },
+  "homepage": "https://github.com/Nearrivers/DND-Quest-Journal#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.3.6"
+  }
+}

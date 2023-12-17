@@ -1,0 +1,162 @@
+package campaign
+
+import (
+	"fmt"
+	"net/http"
+	"strconv"
+	"time"
+
+	"github.com/Nearrivers/DND-quest-tracker/internal/database"
+	db "github.com/Nearrivers/DND-quest-tracker/sql"
+	campaignDtos "github.com/Nearrivers/DND-quest-tracker/src/api/campaign/dtos"
+	campaignTemplate "github.com/Nearrivers/DND-quest-tracker/src/templates/campaign"
+	"github.com/go-chi/chi"
+	"github.com/gorilla/schema"
+)
+
+func GetAllCampaigns(w http.ResponseWriter, r *http.Request) {
+	db := db.GetDbConnection()
+
+	campaings, err := db.GetAllCampaigns(r.Context())
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des campagnes : "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if len(campaings) == 0 {
+		http.Error(w, "Aucune campagne trouvée", http.StatusNotFound)
+		return
+	}
+
+	allCampaings := campaignTemplate.AllCampaigns(campaings)
+	allCampaings.Render(r.Context(), w)
+}
+
+func GetOneCampaign(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		http.Error(w, "%v n'est pas reconnu", http.StatusBadRequest)
+		return
+	}
+
+	db := db.GetDbConnection()
+
+	campaign, err := db.GetOneCampaign(r.Context(), int32(id))
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération d'une campagne :"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	campaignQuests := campaignTemplate.CampaignQuests(campaign)
+	campaignQuests.Render(r.Context(), w)
+}
+
+func CreateCampaign(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+
+	err := r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		http.Error(w, "Erreur lors de la lecture du formulaire : "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	newCampaign := campaignDtos.CreateCampaignDto{}
+
+	decoder := schema.NewDecoder()
+	err = decoder.Decode(&newCampaign, r.PostForm)
+	if err != nil {
+		http.Error(w, "Erreur lors du décodage : "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	db := db.GetDbConnection()
+
+	result, err := db.CreateCampaign(r.Context(), database.CreateCampaignParams{
+		UpdatedAt: time.Now().Local(),
+		CreatedAt: time.Now().Local(),
+		Name:      newCampaign.Name,
+	})
+
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Création de la campaigne %s impossible : %s", newCampaign.Name, err.Error()), http.StatusBadRequest)
+		return
+	}
+
+	lastInsertId, _ := result.LastInsertId()
+
+	campaign, err := db.GetOneCampaign(r.Context(), int32(lastInsertId))
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération de la campagne créée :"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	newLine := campaignTemplate.CreatedCampaign(campaign)
+	newLine.Render(r.Context(), w)
+}
+
+func UpdateCampaign(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		http.Error(w, "%v n'est pas reconnu", http.StatusBadRequest)
+		return
+	}
+
+	defer r.Body.Close()
+
+	db := db.GetDbConnection()
+
+	err = r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		http.Error(w, "Erreur lors de la lecture du formulaire : "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	editedCampaign := campaignDtos.CreateCampaignDto{}
+
+	decoder := schema.NewDecoder()
+	err = decoder.Decode(&editedCampaign, r.PostForm)
+	if err != nil {
+		http.Error(w, "Erreur lors du décodage : "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	result, err := db.UpdateCampaign(r.Context(), database.UpdateCampaignParams{
+		Name:      editedCampaign.Name,
+		UpdatedAt: time.Now().Local(),
+		ID:        int32(id),
+	})
+
+	if err != nil {
+		http.Error(w, "Modification de la campagne impossible : "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	lastInsertId, _ := result.LastInsertId()
+
+	campaign, err := db.GetOneCampaign(r.Context(), int32(lastInsertId))
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération de la campagne modifiée :"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	editedLine := campaignTemplate.CreatedCampaign(campaign)
+	editedLine.Render(r.Context(), w)
+}
+
+func DeleteCampaign(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		http.Error(w, "%v n'est pas reconnu", http.StatusBadRequest)
+		return
+	}
+
+	db := db.GetDbConnection()
+
+	err = db.DeleteCampaign(r.Context(), int32(id))
+	if err != nil {
+		http.Error(w, "Suppression de la campagne impossible :"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Fprint(w, "")
+}
