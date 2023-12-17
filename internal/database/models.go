@@ -14,3 +14,28 @@ type Campaign struct {
 	UpdatedAt time.Time
 	Name      string
 }
+
+type Objective struct {
+	ID          int32
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	Name        string
+	Description string
+	IsActive    bool
+	IsComplete  bool
+	Number      int32
+	QuestID     int32
+}
+
+type Quest struct {
+	ID          int32
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	Name        string
+	Description string
+	Npc         string
+	IsActive    bool
+	IsComplete  bool
+	Number      int32
+	CampaignID  int32
+}
