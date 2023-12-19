@@ -5,7 +5,7 @@ import "fmt"
 templ EditCampaign(campaignId int32, campaignName string) {
 	<form
  		hx-put={ fmt.Sprintf("/campaigns/crud/update/%d", campaignId) }
- 		hx-swap="outerHTML"
+ 		hx-swap="outerHTML transition:true"
  		class="flex items-center gap-4 w-1/2"
  		enctype="multipart/form-data"
 	>

@@ -86,7 +86,7 @@ templ AllCampaigns(campaigns []database.Campaign) {
  					class="p-2 flex text cursor-pointer rounded-md hover:bg-[#222222]"
  					hx-get={ fmt.Sprintf("/quests/campaign/%d", campaign.ID) }
  					hx-target="#campaignQuest"
- 					hx-swap="outerHTML"
+ 					hx-swap="outerHTML transition:true"
  					id={ campaign.Name }
 				>
 					{ campaign.Name }
