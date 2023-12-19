@@ -5,9 +5,18 @@ import "fmt"
 
 templ OneObjective(objective database.Objective) {
 	<li class="p-2">
-		{ objective.Name }
-		<p class="p-2">
-			{ objective.Description }
+		<div class="flex items-center">
+			<span class="material-symbols-outlined text-sm mr-2">
+				emergency
+			</span>
+			<p>
+				{ objective.Name }
+			</p>
+		</div>
+		<p class="pt-2 pl-8">
+			<span class="opacity-80">
+				{ objective.Description }
+			</span>
 		</p>
 	</li>
 }
@@ -20,14 +29,25 @@ templ ObjectiveList(objectives []database.Objective) {
 	</ul>
 }
 
-templ CampaignQuests(campaignName string, quests []database.Quest) {
+templ CampaignTitle(campaign database.Campaign) {
+	<h2
+ 		class="font-medium text-xl"
+	>
+		{ campaign.Name }
+	</h2>
+}
+
+templ CampaignQuests(campaign database.Campaign, quests []database.Quest) {
 	<main class="w-4/5 rounded-lg p-4" id="campaignQuest">
 		<header class="flex items-center justify-between mb-4">
-			<h2 class="font-medium text-xl">
-				{ campaignName }
-			</h2>
+			@CampaignTitle(campaign)
 			<div class="flex gap-4">
-				<button class="text-gray-300 rounded-lg w-11 h-11 pop-in-and-out">
+				<button
+ 					class="text-gray-300 rounded-lg w-11 h-11 pop-in-and-out"
+ 					hx-get={ fmt.Sprintf("/campaigns/template/edit/form/%d", campaign.ID) }
+ 					hx-target="previous h2"
+ 					hx-swap="outerHTML"
+				>
 					<span class="material-symbols-outlined block">
 						edit
 					</span>
@@ -37,24 +57,26 @@ templ CampaignQuests(campaignName string, quests []database.Quest) {
 				</button>
 			</div>
 		</header>
-		<button class="text-gray-300 rounded-lg pop-in-and-out flex items-center gap-2 px-2 py-3">
-			<span class="material-symbols-outlined block">
-				add
-			</span>
-			<p class="font-bold text-lg">
-				Créer une quête
-			</p>
-		</button>
-		<ul class="p-4">
+		<section class="flex mb-4">
+			<button class="text-gray-300 rounded-lg pop-in-and-out flex items-center gap-2 px-2 py-3">
+				<span class="material-symbols-outlined block">
+					add
+				</span>
+				<p class="font-bold text-lg">
+					Créer une quête
+				</p>
+			</button>
+		</section>
+		<ul>
 			for _, quest := range quests {
 				<li
- 					class="p-2 border-t border-t-neutral-700"
+ 					class="pt-2 border-t border-t-neutral-700"
  					hx-get={ fmt.Sprintf("/objectives/quest/%d", quest.ID) }
  					hx-trigger="load"
  					hx-target="#objectives"
  					hx-swap="outerHTML"
 				>
-					<p class="font-semibold">
+					<p class="font-bold text-xl">
 						{ quest.Name }
 					</p>
 					<h3 class="font-medium mt-2">Objectifs :</h3>

@@ -18,7 +18,7 @@ templ index() {
 			</header>
 			<main class="flex gap-4 px-4">
 				// Remplacé par AllCampaigns.templ
-				<span hx-get="/campaigns" hx-trigger="load" hx-swap="outerHTML"></span>
+				<span hx-get="/campaigns/crud/read" hx-trigger="load" hx-swap="outerHTML"></span>
 				// Remplacé par CampaignQuests.templ avec les quêtes de la campagne sélectionnée
 				<span id="campaignQuest"></span>
 			</main>

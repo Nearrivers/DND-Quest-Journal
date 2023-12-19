@@ -10,11 +10,14 @@ import (
 	db "github.com/Nearrivers/DND-quest-tracker/sql"
 	campaignDtos "github.com/Nearrivers/DND-quest-tracker/src/api/campaign/dtos"
 	campaignTemplate "github.com/Nearrivers/DND-quest-tracker/src/templates/campaign"
+	questTemplate "github.com/Nearrivers/DND-quest-tracker/src/templates/quest"
 	"github.com/go-chi/chi"
 	"github.com/gorilla/schema"
 )
 
-func GetAllCampaigns(w http.ResponseWriter, r *http.Request) {
+// CRUD Routes
+
+func getAllCampaigns(w http.ResponseWriter, r *http.Request) {
 	db := db.GetDbConnection()
 
 	campaings, err := db.GetAllCampaigns(r.Context())
@@ -32,7 +35,7 @@ func GetAllCampaigns(w http.ResponseWriter, r *http.Request) {
 	allCampaings.Render(r.Context(), w)
 }
 
-func GetOneCampaign(w http.ResponseWriter, r *http.Request) {
+func getOneCampaign(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		http.Error(w, "%v n'est pas reconnu", http.StatusBadRequest)
@@ -51,7 +54,7 @@ func GetOneCampaign(w http.ResponseWriter, r *http.Request) {
 	campaignQuests.Render(r.Context(), w)
 }
 
-func CreateCampaign(w http.ResponseWriter, r *http.Request) {
+func createCampaign(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	err := r.ParseMultipartForm(10 << 20)
@@ -95,7 +98,7 @@ func CreateCampaign(w http.ResponseWriter, r *http.Request) {
 	newLine.Render(r.Context(), w)
 }
 
-func UpdateCampaign(w http.ResponseWriter, r *http.Request) {
+func updateCampaign(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		http.Error(w, "%v n'est pas reconnu", http.StatusBadRequest)
@@ -139,11 +142,11 @@ func UpdateCampaign(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	editedLine := campaignTemplate.CreatedCampaign(campaign)
+	editedLine := questTemplate.CampaignTitle(campaign)
 	editedLine.Render(r.Context(), w)
 }
 
-func DeleteCampaign(w http.ResponseWriter, r *http.Request) {
+func deleteCampaign(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("%v n'est pas reconnu", id), http.StatusBadRequest)
@@ -161,4 +164,25 @@ func DeleteCampaign(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusNoContent)
 	fmt.Fprint(w, "")
+}
+
+// Templates only routes
+
+func getEditCampaignTemplate(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		http.Error(w, "%v n'est pas reconnu", http.StatusBadRequest)
+		return
+	}
+
+	db := db.GetDbConnection()
+
+	campaign, err := db.GetOneCampaign(r.Context(), int32(id))
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération d'une campagne :"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	editCampaign := campaignTemplate.EditCampaign(campaign.ID, campaign.Name)
+	editCampaign.Render(r.Context(), w)
 }

@@ -41,7 +41,7 @@ func GetCampaignQuests(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	allQuests := questTemplate.CampaignQuests(campaign.Name, quests)
+	allQuests := questTemplate.CampaignQuests(campaign, quests)
 	allQuests.Render(r.Context(), w)
 }
 

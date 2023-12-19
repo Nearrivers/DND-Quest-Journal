@@ -3,6 +3,12 @@ package campaignTemplate
 import "github.com/Nearrivers/DND-quest-tracker/internal/database"
 import "fmt"
 
+templ CreatedCampaign(campaign database.Campaign) {
+	<li class="">
+		{ campaign.Name }
+	</li>
+}
+
 templ AllCampaigns(campaigns []database.Campaign) {
 	<aside class="w-1/5 max-h-max">
 		<ul class="pop-out rounded-lg p-4">

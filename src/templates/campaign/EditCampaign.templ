@@ -1,0 +1,25 @@
+package campaignTemplate
+
+import "fmt"
+
+templ EditCampaign(campaignId int32, campaignName string) {
+	<form
+ 		hx-put={ fmt.Sprintf("/campaigns/crud/update/%d", campaignId) }
+ 		hx-swap="outerHTML"
+ 		class="flex items-center gap-4 w-1/2"
+ 		enctype="multipart/form-data"
+	>
+		<input
+ 			class="rounded-md bg-transparent outline-none border border-neutral-700 font-medium text-xl w-3/4 h-11 pl-2"
+ 			placeholder={ campaignName }
+ 			name="Name"
+ 			id="Name"
+ 			autocomplete="off"
+		/>
+		<button
+ 			class="text-green-300 rounded-lg w-11 h-11 pop-in-and-out"
+		>
+			<span class="material-symbols-outlined block">save</span>
+		</button>
+	</form>
+}
