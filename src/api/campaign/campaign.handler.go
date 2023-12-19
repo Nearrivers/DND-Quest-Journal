@@ -54,35 +54,18 @@ func getOneCampaign(w http.ResponseWriter, r *http.Request) {
 	campaignQuests.Render(r.Context(), w)
 }
 
-func createCampaign(w http.ResponseWriter, r *http.Request) (database.Campaign, error) {
-	defer r.Body.Close()
-
-	err := r.ParseMultipartForm(10 << 20)
-	if err != nil {
-		http.Error(w, "Erreur lors de la lecture du formulaire : "+err.Error(), http.StatusBadRequest)
-		return database.Campaign{}, err
-	}
-
-	newCampaign := campaignDtos.CreateCampaignDto{}
-
-	decoder := schema.NewDecoder()
-	err = decoder.Decode(&newCampaign, r.PostForm)
-	if err != nil {
-		http.Error(w, "Erreur lors du décodage : "+err.Error(), http.StatusBadRequest)
-		return database.Campaign{}, err
-	}
-
+func createCampaign(w http.ResponseWriter, r *http.Request) {
 	db := db.GetDbConnection()
 
 	result, err := db.CreateCampaign(r.Context(), database.CreateCampaignParams{
 		UpdatedAt: time.Now().UTC(),
 		CreatedAt: time.Now().UTC(),
-		Name:      newCampaign.Name,
+		Name:      "Nouvelle campagne",
 	})
 
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Création de la campaigne %s impossible : %s", newCampaign.Name, err.Error()), http.StatusBadRequest)
-		return database.Campaign{}, err
+		http.Error(w, "Création de la campaigne %s impossible", http.StatusInternalServerError)
+		return
 	}
 
 	lastInsertId, _ := result.LastInsertId()
@@ -90,12 +73,10 @@ func createCampaign(w http.ResponseWriter, r *http.Request) (database.Campaign, 
 	campaign, err := db.GetOneCampaign(r.Context(), int32(lastInsertId))
 	if err != nil {
 		http.Error(w, "Erreur lors de la récupération de la campagne créée :"+err.Error(), http.StatusInternalServerError)
-		return database.Campaign{}, err
+		return
 	}
 
-	return campaign, nil
-	// newLine := campaignTemplate.CreatedCampaign(campaign)
-	// newLine.Render(r.Context(), w)
+	campaignTemplate.OneCampaign(campaign).Render(r.Context(), w)
 }
 
 func updateCampaign(w http.ResponseWriter, r *http.Request) {
@@ -174,8 +155,33 @@ func getCreateFirstCampaignTemplate(w http.ResponseWriter, r *http.Request) {
 }
 
 func createFirstCampaign(w http.ResponseWriter, r *http.Request) {
-	_, err := createCampaign(w, r)
+	defer r.Body.Close()
+
+	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
+		http.Error(w, "Erreur lors de la lecture du formulaire : "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	newCampaign := campaignDtos.CreateCampaignDto{}
+
+	decoder := schema.NewDecoder()
+	err = decoder.Decode(&newCampaign, r.PostForm)
+	if err != nil {
+		http.Error(w, "Erreur lors du décodage : "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	db := db.GetDbConnection()
+
+	_, err = db.CreateCampaign(r.Context(), database.CreateCampaignParams{
+		UpdatedAt: time.Now().UTC(),
+		CreatedAt: time.Now().UTC(),
+		Name:      newCampaign.Name,
+	})
+
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Création de la campaigne %s impossible : %s", newCampaign.Name, err.Error()), http.StatusBadRequest)
 		return
 	}
 

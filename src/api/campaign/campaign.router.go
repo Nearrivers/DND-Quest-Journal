@@ -8,7 +8,7 @@ func ConfigureCampaignRoutes() *chi.Mux {
 	// CRUD routes
 	router.Get("/crud/read", getAllCampaigns)
 	router.Get("/crud/read/{id}", getOneCampaign)
-	// router.Post("/crud/create", createCampaign)
+	router.Post("/crud/create", createCampaign)
 	router.Post("/crud/create/first", createFirstCampaign)
 	router.Put("/crud/update/{id}", updateCampaign)
 	router.Delete("/crud/delete/{id}", deleteCampaign)

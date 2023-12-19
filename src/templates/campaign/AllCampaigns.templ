@@ -70,27 +70,36 @@ templ CreatedCampaign(campaign database.Campaign) {
 	</li>
 }
 
+templ OneCampaign(campaign database.Campaign) {
+	<li
+ 		class="p-2 flex text cursor-pointer rounded-md hover:bg-[#222222]"
+ 		hx-get={ fmt.Sprintf("/quests/campaign/%d", campaign.ID) }
+ 		hx-target="#campaignQuest"
+ 		hx-swap="outerHTML transition:true"
+ 		id={ campaign.Name }
+	>
+		{ campaign.Name }
+	</li>
+}
+
 templ AllCampaigns(campaigns []database.Campaign) {
 	<aside class="w-1/5 max-h-max">
 		<ul class="pop-out rounded-lg p-4">
 			<li class="font-medium text-lg mb-4 flex justify-between items-center">
 				Mes campagnes
-				<button class="text-gray-300 rounded-lg w-11 h-11 pop-in-and-out">
+				<button
+ 					class="text-gray-300 rounded-lg w-11 h-11 pop-in-and-out"
+ 					hx-post="/campaigns/crud/create"
+ 					hx-target="closest ul"
+ 					hx-swap="beforeend"
+				>
 					<span class="material-symbols-outlined block">
 						add
 					</span>
 				</button>
 			</li>
 			for _, campaign := range campaigns {
-				<li
- 					class="p-2 flex text cursor-pointer rounded-md hover:bg-[#222222]"
- 					hx-get={ fmt.Sprintf("/quests/campaign/%d", campaign.ID) }
- 					hx-target="#campaignQuest"
- 					hx-swap="outerHTML transition:true"
- 					id={ campaign.Name }
-				>
-					{ campaign.Name }
-				</li>
+				@OneCampaign(campaign)
 			}
 		</ul>
 	</aside>
