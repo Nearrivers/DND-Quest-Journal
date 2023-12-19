@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -35,7 +36,8 @@ func main() {
 
 	err := db.ConnectToDb()
 	if err != nil {
-		log.Fatal(err.Error())
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
 
 	router := chi.NewRouter()
