@@ -4,16 +4,16 @@ import "github.com/Nearrivers/DND-quest-tracker/internal/database"
 import "fmt"
 
 templ OneObjective(objective database.Objective) {
-	<li>
+	<li class="p-2">
 		{ objective.Name }
-		<p>
+		<p class="p-2">
 			{ objective.Description }
 		</p>
 	</li>
 }
 
 templ ObjectiveList(objectives []database.Objective) {
-	<ul>
+	<ul class="pl-2">
 		for _, goal := range objectives {
 			@OneObjective(goal)
 		}
@@ -47,8 +47,18 @@ templ CampaignQuests(campaignName string, quests []database.Quest) {
 		</button>
 		<ul class="p-4">
 			for _, quest := range quests {
-				<li class="p-2 flex text cursor-pointer border-t border-t-neutral-700" hx-get={ fmt.Sprintf("/objectives/quest/%d", quest.ID) }>
-					{ quest.Name }
+				<li
+ 					class="p-2 border-t border-t-neutral-700"
+ 					hx-get={ fmt.Sprintf("/objectives/quest/%d", quest.ID) }
+ 					hx-trigger="load"
+ 					hx-target="#objectives"
+ 					hx-swap="outerHTML"
+				>
+					<p class="font-semibold">
+						{ quest.Name }
+					</p>
+					<h3 class="font-medium mt-2">Objectifs :</h3>
+					<span id="objectives"></span>
 				</li>
 			}
 		</ul>
