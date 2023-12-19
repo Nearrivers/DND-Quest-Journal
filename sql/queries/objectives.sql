@@ -1,18 +1,23 @@
 -- name: GetOneObjective :one
 SELECT * FROM objectives
-WHERE id = ? LIMIT 1;
+WHERE id = ?
+ORDER BY number
+LIMIT 1;
 
 -- name: GetAllQuestObjectives :many
 SELECT * from objectives
-WHERE quest_id = ?;
+WHERE quest_id = ?
+ORDER BY number;
 
 -- name: GetAllQuestActiveObjectives :many
 SELECT * from objectives
-WHERE quest_id = ? AND is_active = true;
+WHERE quest_id = ? AND is_active = true
+ORDER BY number;
 
 -- name: GetAllQuestDoneObjectives :many
 SELECT * from objectives
-WHERE quest_id = ? AND is_complete = true;
+WHERE quest_id = ? AND is_complete = true
+ORDER BY number;
 
 -- name: CreateObjective :execresult
 INSERT INTO objectives (created_at, updated_at, name, description, number, quest_id)

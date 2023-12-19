@@ -59,6 +59,7 @@ func (q *Queries) FinishQuest(ctx context.Context, id int32) (sql.Result, error)
 const getAllCampaignActiveQuests = `-- name: GetAllCampaignActiveQuests :many
 SELECT id, created_at, updated_at, name, description, npc, is_complete, is_active, number, campaign_id FROM quests
 WHERE campaign_id = ? AND is_active = true
+ORDER BY number
 `
 
 func (q *Queries) GetAllCampaignActiveQuests(ctx context.Context, campaignID int32) ([]Quest, error) {
@@ -98,6 +99,7 @@ func (q *Queries) GetAllCampaignActiveQuests(ctx context.Context, campaignID int
 const getAllCampaignDoneQuests = `-- name: GetAllCampaignDoneQuests :many
 SELECT id, created_at, updated_at, name, description, npc, is_complete, is_active, number, campaign_id FROM quests
 WHERE campaign_id = ? AND is_complete = true
+ORDER BY number
 `
 
 func (q *Queries) GetAllCampaignDoneQuests(ctx context.Context, campaignID int32) ([]Quest, error) {
@@ -137,6 +139,7 @@ func (q *Queries) GetAllCampaignDoneQuests(ctx context.Context, campaignID int32
 const getAllCampaignQuests = `-- name: GetAllCampaignQuests :many
 SELECT id, created_at, updated_at, name, description, npc, is_complete, is_active, number, campaign_id FROM quests
 WHERE campaign_id = ?
+ORDER BY number
 `
 
 func (q *Queries) GetAllCampaignQuests(ctx context.Context, campaignID int32) ([]Quest, error) {
@@ -175,7 +178,9 @@ func (q *Queries) GetAllCampaignQuests(ctx context.Context, campaignID int32) ([
 
 const getOneQuest = `-- name: GetOneQuest :one
 SELECT id, created_at, updated_at, name, description, npc, is_complete, is_active, number, campaign_id from quests
-WHERE id = ? LIMIT 1
+WHERE id = ?
+ORDER BY number
+LIMIT 1
 `
 
 func (q *Queries) GetOneQuest(ctx context.Context, id int32) (Quest, error) {

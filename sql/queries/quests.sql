@@ -1,18 +1,23 @@
 -- name: GetOneQuest :one
 SELECT * from quests
-WHERE id = ? LIMIT 1;
+WHERE id = ?
+ORDER BY number
+LIMIT 1;
 
 -- name: GetAllCampaignQuests :many
 SELECT * FROM quests
-WHERE campaign_id = ?;
+WHERE campaign_id = ?
+ORDER BY number;
 
 -- name: GetAllCampaignActiveQuests :many
 SELECT * FROM quests
-WHERE campaign_id = ? AND is_active = true;
+WHERE campaign_id = ? AND is_active = true
+ORDER BY number;
 
 -- name: GetAllCampaignDoneQuests :many
 SELECT * FROM quests
-WHERE campaign_id = ? AND is_complete = true;
+WHERE campaign_id = ? AND is_complete = true
+ORDER BY number;
 
 -- name: CreateQuest :execresult
 INSERT INTO quests (created_at, updated_at, name, description, npc, number, campaign_id)
