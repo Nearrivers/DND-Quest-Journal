@@ -21,7 +21,8 @@ CREATE TABLE quests (
 );
 
 ALTER TABLE quests
-ADD FOREIGN KEY (campaign_id) REFERENCES campaigns(id);
+ADD FOREIGN KEY (campaign_id) REFERENCES campaigns(id)
+ON DELETE CASCADE;
 
 CREATE TABLE objectives (
   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -36,7 +37,8 @@ CREATE TABLE objectives (
 );
 
 ALTER TABLE objectives
-ADD FOREIGN KEY (quest_id) REFERENCES quests(id);
+ADD FOREIGN KEY (quest_id) REFERENCES quests(id)
+ON DELETE CASCADE;
 
 -- +goose Down
 
