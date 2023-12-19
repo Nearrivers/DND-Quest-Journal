@@ -10,7 +10,12 @@ templ CreatedCampaign(campaign database.Campaign) {
 }
 
 templ AllCampaigns(campaigns []database.Campaign) {
-	<aside class="w-1/5 max-h-max">
+	<aside
+ 		class="w-1/5 max-h-max"
+ 		hx-get="/campaigns/crud/read"
+ 		hx-trigger="editedCampaign from:body"
+ 		hx-swap="outerHTML"
+	>
 		<ul class="pop-out rounded-lg p-4">
 			<li class="font-medium text-lg mb-4 flex justify-between items-center">
 				Mes campagnes

@@ -124,15 +124,17 @@ func updateCampaign(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = db.UpdateCampaign(r.Context(), database.UpdateCampaignParams{
-		Name:      editedCampaign.Name,
-		UpdatedAt: time.Now().Local(),
-		ID:        int32(id),
-	})
+	if editedCampaign.Name != "" {
+		_, err = db.UpdateCampaign(r.Context(), database.UpdateCampaignParams{
+			Name:      editedCampaign.Name,
+			UpdatedAt: time.Now().Local(),
+			ID:        int32(id),
+		})
 
-	if err != nil {
-		http.Error(w, "Modification de la campagne impossible : "+err.Error(), http.StatusInternalServerError)
-		return
+		if err != nil {
+			http.Error(w, "Modification de la campagne impossible : "+err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	campaign, err := db.GetOneCampaign(r.Context(), int32(id))

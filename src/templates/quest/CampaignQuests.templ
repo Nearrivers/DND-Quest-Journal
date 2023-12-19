@@ -32,6 +32,10 @@ templ ObjectiveList(objectives []database.Objective) {
 templ CampaignTitle(campaign database.Campaign) {
 	<h2
  		class="font-medium text-xl"
+ 		hx-get="/campaigns/crud/read"
+ 		hx-trigger="load"
+ 		hx-target="previous aside"
+ 		hx-swap="outerHTML"
 	>
 		{ campaign.Name }
 	</h2>
@@ -76,9 +80,14 @@ templ CampaignQuests(campaign database.Campaign, quests []database.Quest) {
  					hx-target="#objectives"
  					hx-swap="outerHTML"
 				>
-					<p class="font-bold text-xl">
-						{ quest.Name }
-					</p>
+					<div class="flex items-center justify-between">
+						<p class="font-bold text-xl">
+							{ quest.Name }
+						</p>
+						<p>
+							{ quest.Npc }
+						</p>
+					</div>
 					<h3 class="font-medium mt-2">Objectifs :</h3>
 					<span id="objectives"></span>
 				</li>
