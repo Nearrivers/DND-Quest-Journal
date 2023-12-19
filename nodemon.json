@@ -1,0 +1,3 @@
+{
+  "ignore": ["*_templ.go", "src/templates/**/*.go"]
+}

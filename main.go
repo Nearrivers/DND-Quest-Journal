@@ -7,6 +7,8 @@ import (
 
 	db "github.com/Nearrivers/DND-quest-tracker/sql"
 	"github.com/Nearrivers/DND-quest-tracker/src/api/campaign"
+	objective "github.com/Nearrivers/DND-quest-tracker/src/api/objectif"
+	"github.com/Nearrivers/DND-quest-tracker/src/api/quest"
 	"github.com/Nearrivers/DND-quest-tracker/src/middleware"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
@@ -31,11 +33,16 @@ func setupFilesRoutes() *chi.Mux {
 func main() {
 	godotenv.Load()
 
-	db.ConnectToDb()
+	err := db.ConnectToDb()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
 	router := chi.NewRouter()
 	filesRouter := setupFilesRoutes()
 	campaignRouter := campaign.ConfigureCampaignRoutes()
+	questRouter := quest.ConfigureQuestRoutes()
+	objectiveRouter := objective.ConfigureObjectiveRoutes()
 
 	router.Use(cors.Handler(cors.Options{
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -45,9 +52,10 @@ func main() {
 	}))
 
 	router.Use(middleware.Logger)
-
 	router.Mount("/", filesRouter)
 	router.Mount("/campaigns", campaignRouter)
+	router.Mount("/quests", questRouter)
+	router.Mount("/objectives", objectiveRouter)
 
 	// Affichage de la page index
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {

@@ -2,7 +2,7 @@ package db
 
 import (
 	"database/sql"
-	"log"
+	"errors"
 	"os"
 
 	"github.com/Nearrivers/DND-quest-tracker/internal/database"
@@ -10,18 +10,19 @@ import (
 
 var db *database.Queries
 
-func ConnectToDb() {
+func ConnectToDb() error {
 	dbURL := os.Getenv("DB_URL")
 	if dbURL == "" {
-		log.Fatal("Identifiants de connexion à la base de données manquants")
+		return errors.New("identifiants de connexion à la base de données manquants")
 	}
 
 	conn, err := sql.Open("mysql", dbURL)
 	if err != nil {
-		log.Fatal("Connexion à la base de données impossible")
+		return errors.New("connexion à la base de données impossible")
 	}
 
 	db = database.New(conn)
+	return nil
 }
 
 func GetDbConnection() *database.Queries {

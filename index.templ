@@ -2,7 +2,7 @@ package main
 
 templ index() {
 	<!DOCTYPE html>
-	<html lang="fr" class="bg-slate-800">
+	<html lang="fr" class="bg-neutral-800 text-gray-200">
 		<head>
 			<meta charset="utf-8"/>
 			<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -13,23 +13,14 @@ templ index() {
 			<script type="text/javascript" src="scripts/htmx.min.js"></script>
 		</head>
 		<body>
-			<header class="flex justify-between p-4 items-center">
-				<h1 class="text-xl">Journal de quêtes DND</h1>
-				<button
- 					hx-get="/monster/new"
- 					class="bg-accent-4 px-3 py-4 rounded-lg flex items-center gap-4 text-accent-1 font-medium h-min"
- 					hx-target="body"
- 					hx-push-url="true"
-				>
-					<span class="material-symbols-outlined">
-						edit
-					</span>
-					<p>Nouveau monstre</p>
-				</button>
+			<header class="p-4 text-center">
+				<h1 class="text-xl font-bold">Journal de quêtes DND</h1>
 			</header>
 			<main class="flex gap-4 px-4">
-				<span hx-get="/campaign/list" hx-trigger="load" hx-swap="outerHTML"></span>
-				<span hx-get="/monster/list" hx-trigger="load" hx-swap="outerHTML"></span>
+				// Remplacé par AllCampaigns.templ
+				<span hx-get="/campaigns" hx-trigger="load" hx-swap="outerHTML"></span>
+				// Remplacé par CampaignQuests.templ avec les quêtes de la campagne sélectionnée
+				<span id="campaignQuest"></span>
 			</main>
 		</body>
 	</html>

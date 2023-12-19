@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {}
+
+@layer components {
+  .pop-out {
+    box-shadow: 5px 5px 10px #191919,
+      -5px -5px 10px #333333;
+  }
+
+  .pop-in-and-out {
+    background: linear-gradient(145deg, #222222, #292929);
+    box-shadow: 5px 5px 10px #191919,
+      -5px -5px 10px #333333;
+  }
+
+  .pop-in {
+    box-shadow: inset 5px 5px 10px #191919,
+      inset -5px -5px 10px #333333;
+  }
+}

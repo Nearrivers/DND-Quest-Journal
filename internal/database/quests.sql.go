@@ -56,13 +56,13 @@ func (q *Queries) FinishQuest(ctx context.Context, id int32) (sql.Result, error)
 	return q.db.ExecContext(ctx, finishQuest, id)
 }
 
-const getAllActiveQuests = `-- name: GetAllActiveQuests :many
-SELECT id, created_at, updated_at, name, description, npc, is_active, is_complete, number, campaign_id FROM quests
+const getAllCampaignActiveQuests = `-- name: GetAllCampaignActiveQuests :many
+SELECT id, created_at, updated_at, name, description, npc, is_complete, is_active, number, campaign_id FROM quests
 WHERE campaign_id = ? AND is_active = true
 `
 
-func (q *Queries) GetAllActiveQuests(ctx context.Context, campaignID int32) ([]Quest, error) {
-	rows, err := q.db.QueryContext(ctx, getAllActiveQuests, campaignID)
+func (q *Queries) GetAllCampaignActiveQuests(ctx context.Context, campaignID int32) ([]Quest, error) {
+	rows, err := q.db.QueryContext(ctx, getAllCampaignActiveQuests, campaignID)
 	if err != nil {
 		return nil, err
 	}
@@ -77,8 +77,8 @@ func (q *Queries) GetAllActiveQuests(ctx context.Context, campaignID int32) ([]Q
 			&i.Name,
 			&i.Description,
 			&i.Npc,
-			&i.IsActive,
 			&i.IsComplete,
+			&i.IsActive,
 			&i.Number,
 			&i.CampaignID,
 		); err != nil {
@@ -95,13 +95,13 @@ func (q *Queries) GetAllActiveQuests(ctx context.Context, campaignID int32) ([]Q
 	return items, nil
 }
 
-const getAllDoneQuests = `-- name: GetAllDoneQuests :many
-SELECT id, created_at, updated_at, name, description, npc, is_active, is_complete, number, campaign_id FROM quests
+const getAllCampaignDoneQuests = `-- name: GetAllCampaignDoneQuests :many
+SELECT id, created_at, updated_at, name, description, npc, is_complete, is_active, number, campaign_id FROM quests
 WHERE campaign_id = ? AND is_complete = true
 `
 
-func (q *Queries) GetAllDoneQuests(ctx context.Context, campaignID int32) ([]Quest, error) {
-	rows, err := q.db.QueryContext(ctx, getAllDoneQuests, campaignID)
+func (q *Queries) GetAllCampaignDoneQuests(ctx context.Context, campaignID int32) ([]Quest, error) {
+	rows, err := q.db.QueryContext(ctx, getAllCampaignDoneQuests, campaignID)
 	if err != nil {
 		return nil, err
 	}
@@ -116,8 +116,8 @@ func (q *Queries) GetAllDoneQuests(ctx context.Context, campaignID int32) ([]Que
 			&i.Name,
 			&i.Description,
 			&i.Npc,
-			&i.IsActive,
 			&i.IsComplete,
+			&i.IsActive,
 			&i.Number,
 			&i.CampaignID,
 		); err != nil {
@@ -134,13 +134,13 @@ func (q *Queries) GetAllDoneQuests(ctx context.Context, campaignID int32) ([]Que
 	return items, nil
 }
 
-const getAllQuests = `-- name: GetAllQuests :many
-SELECT id, created_at, updated_at, name, description, npc, is_active, is_complete, number, campaign_id FROM quests
+const getAllCampaignQuests = `-- name: GetAllCampaignQuests :many
+SELECT id, created_at, updated_at, name, description, npc, is_complete, is_active, number, campaign_id FROM quests
 WHERE campaign_id = ?
 `
 
-func (q *Queries) GetAllQuests(ctx context.Context, campaignID int32) ([]Quest, error) {
-	rows, err := q.db.QueryContext(ctx, getAllQuests, campaignID)
+func (q *Queries) GetAllCampaignQuests(ctx context.Context, campaignID int32) ([]Quest, error) {
+	rows, err := q.db.QueryContext(ctx, getAllCampaignQuests, campaignID)
 	if err != nil {
 		return nil, err
 	}
@@ -155,8 +155,8 @@ func (q *Queries) GetAllQuests(ctx context.Context, campaignID int32) ([]Quest, 
 			&i.Name,
 			&i.Description,
 			&i.Npc,
-			&i.IsActive,
 			&i.IsComplete,
+			&i.IsActive,
 			&i.Number,
 			&i.CampaignID,
 		); err != nil {
@@ -174,7 +174,7 @@ func (q *Queries) GetAllQuests(ctx context.Context, campaignID int32) ([]Quest, 
 }
 
 const getOneQuest = `-- name: GetOneQuest :one
-SELECT id, created_at, updated_at, name, description, npc, is_active, is_complete, number, campaign_id from quests
+SELECT id, created_at, updated_at, name, description, npc, is_complete, is_active, number, campaign_id from quests
 WHERE id = ? LIMIT 1
 `
 
@@ -188,8 +188,8 @@ func (q *Queries) GetOneQuest(ctx context.Context, id int32) (Quest, error) {
 		&i.Name,
 		&i.Description,
 		&i.Npc,
-		&i.IsActive,
 		&i.IsComplete,
+		&i.IsActive,
 		&i.Number,
 		&i.CampaignID,
 	)

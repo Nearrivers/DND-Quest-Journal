@@ -34,8 +34,8 @@ type Quest struct {
 	Name        string
 	Description string
 	Npc         string
-	IsActive    bool
 	IsComplete  bool
+	IsActive    bool
 	Number      int32
 	CampaignID  int32
 }

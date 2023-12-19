@@ -90,6 +90,7 @@ func CreateCampaign(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusCreated)
 	newLine := campaignTemplate.CreatedCampaign(campaign)
 	newLine.Render(r.Context(), w)
 }
@@ -137,6 +138,7 @@ func UpdateCampaign(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusCreated)
 	editedLine := campaignTemplate.CreatedCampaign(campaign)
 	editedLine.Render(r.Context(), w)
 }
@@ -157,5 +159,6 @@ func DeleteCampaign(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusNoContent)
 	fmt.Fprint(w, "")
 }

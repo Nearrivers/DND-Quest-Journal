@@ -1,0 +1,56 @@
+package questTemplate
+
+import "github.com/Nearrivers/DND-quest-tracker/internal/database"
+import "fmt"
+
+templ OneObjective(objective database.Objective) {
+	<li>
+		{ objective.Name }
+		<p>
+			{ objective.Description }
+		</p>
+	</li>
+}
+
+templ ObjectiveList(objectives []database.Objective) {
+	<ul>
+		for _, goal := range objectives {
+			@OneObjective(goal)
+		}
+	</ul>
+}
+
+templ CampaignQuests(campaignName string, quests []database.Quest) {
+	<main class="w-4/5 rounded-lg p-4" id="campaignQuest">
+		<header class="flex items-center justify-between mb-4">
+			<h2 class="font-medium text-xl">
+				{ campaignName }
+			</h2>
+			<div class="flex gap-4">
+				<button class="text-gray-300 rounded-lg w-11 h-11 pop-in-and-out">
+					<span class="material-symbols-outlined block">
+						edit
+					</span>
+				</button>
+				<button class="text-red-400 rounded-lg w-11 h-11 pop-in-and-out">
+					<span class="material-symbols-outlined block">delete</span>
+				</button>
+			</div>
+		</header>
+		<button class="text-gray-300 rounded-lg pop-in-and-out flex items-center gap-2 px-2 py-3">
+			<span class="material-symbols-outlined block">
+				add
+			</span>
+			<p class="font-bold text-lg">
+				Créer une quête
+			</p>
+		</button>
+		<ul class="p-4">
+			for _, quest := range quests {
+				<li class="p-2 flex text cursor-pointer border-t border-t-neutral-700" hx-get={ fmt.Sprintf("/objectives/quest/%d", quest.ID) }>
+					{ quest.Name }
+				</li>
+			}
+		</ul>
+	</main>
+}
