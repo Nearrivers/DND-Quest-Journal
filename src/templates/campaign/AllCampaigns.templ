@@ -3,6 +3,67 @@ package campaignTemplate
 import "github.com/Nearrivers/DND-quest-tracker/internal/database"
 import "fmt"
 
+templ NoCampaign() {
+	<section class="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
+		<h2 class="font-bold text-2xl mb-8">
+			Aucune campagne n'a été trouvée
+		</h2>
+		<button
+ 			class="text-gray-300 rounded-lg pop-in-and-out flex gap-2 items-center px-2 py-4 mx-auto"
+ 			hx-get="/campaigns/template/create/first"
+ 			hx-target="closest section"
+ 			hx-swap="innerHTML transition:true"
+		>
+			<span class="material-symbols-outlined block">
+				add
+			</span>
+			<p class="font-medium">
+				Créer ma première campagne
+			</p>
+		</button>
+	</section>
+}
+
+templ AppReRender() {
+	<span hx-get="/" hx-trigger="load" hx-target="closest main" hx-swap="outerHTML"></span>
+}
+
+templ FirstCampaign() {
+	<form
+ 		hx-post="/campaigns/crud/create/first"
+ 		hx-target="closest section"
+ 		hx-swap="outerHTML transition:true"
+ 		class="rounded-lg pop-out p-6"
+ 		enctype="multipart/form-data"
+	>
+		<h2
+ 			class="text-2xl font-semibold mb-10 text-center"
+		>
+			Créer la première campagne
+		</h2>
+		<label
+ 			for="Name"
+ 			class="mr-4"
+		>
+			Nom de la campagne
+		</label>
+		<input
+ 			type="text"
+ 			required="true"
+ 			name="Name"
+ 			class="bg-transparent outline-none border border-neutral-700 rounded-md h-11 pl-2 mb-8"
+		/>
+		<button class="flex gap-2 items-center pop-in-and-out mx-auto p-4 rounded-lg">
+			<p>
+				Démarrer
+			</p>
+			<span class="material-symbols-outlined">
+				trending_flat
+			</span>
+		</button>
+	</form>
+}
+
 templ CreatedCampaign(campaign database.Campaign) {
 	<li class="">
 		{ campaign.Name }
@@ -10,12 +71,7 @@ templ CreatedCampaign(campaign database.Campaign) {
 }
 
 templ AllCampaigns(campaigns []database.Campaign) {
-	<aside
- 		class="w-1/5 max-h-max"
- 		hx-get="/campaigns/crud/read"
- 		hx-trigger="editedCampaign from:body"
- 		hx-swap="outerHTML"
-	>
+	<aside class="w-1/5 max-h-max">
 		<ul class="pop-out rounded-lg p-4">
 			<li class="font-medium text-lg mb-4 flex justify-between items-center">
 				Mes campagnes

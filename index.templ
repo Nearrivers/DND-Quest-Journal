@@ -9,14 +9,12 @@ templ index() {
 			<title>Créateur de monstre DnD</title>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
 			<link href="styles/output.css" rel="stylesheet"/>
+			<link href="styles/transitions.css" rel="stylesheet"/>
 			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
 			<script type="text/javascript" src="scripts/htmx.min.js"></script>
 		</head>
 		<body>
-			<header class="p-4 text-center">
-				<h1 class="text-xl font-bold">Journal de quêtes DND</h1>
-			</header>
-			<main class="flex gap-4 px-4">
+			<main class="flex gap-4 p-4">
 				// Remplacé par AllCampaigns.templ
 				<span hx-get="/campaigns/crud/read" hx-trigger="load" hx-swap="outerHTML"></span>
 				// Remplacé par CampaignQuests.templ avec les quêtes de la campagne sélectionnée

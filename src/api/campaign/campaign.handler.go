@@ -27,12 +27,12 @@ func getAllCampaigns(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(campaings) == 0 {
-		http.Error(w, "Aucune campagne trouvée", http.StatusNotFound)
-		return
+		noCampaign := campaignTemplate.NoCampaign()
+		noCampaign.Render(r.Context(), w)
+	} else {
+		allCampaings := campaignTemplate.AllCampaigns(campaings)
+		allCampaings.Render(r.Context(), w)
 	}
-
-	allCampaings := campaignTemplate.AllCampaigns(campaings)
-	allCampaings.Render(r.Context(), w)
 }
 
 func getOneCampaign(w http.ResponseWriter, r *http.Request) {
@@ -54,13 +54,13 @@ func getOneCampaign(w http.ResponseWriter, r *http.Request) {
 	campaignQuests.Render(r.Context(), w)
 }
 
-func createCampaign(w http.ResponseWriter, r *http.Request) {
+func createCampaign(w http.ResponseWriter, r *http.Request) (database.Campaign, error) {
 	defer r.Body.Close()
 
 	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
 		http.Error(w, "Erreur lors de la lecture du formulaire : "+err.Error(), http.StatusBadRequest)
-		return
+		return database.Campaign{}, err
 	}
 
 	newCampaign := campaignDtos.CreateCampaignDto{}
@@ -69,7 +69,7 @@ func createCampaign(w http.ResponseWriter, r *http.Request) {
 	err = decoder.Decode(&newCampaign, r.PostForm)
 	if err != nil {
 		http.Error(w, "Erreur lors du décodage : "+err.Error(), http.StatusBadRequest)
-		return
+		return database.Campaign{}, err
 	}
 
 	db := db.GetDbConnection()
@@ -82,7 +82,7 @@ func createCampaign(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Création de la campaigne %s impossible : %s", newCampaign.Name, err.Error()), http.StatusBadRequest)
-		return
+		return database.Campaign{}, err
 	}
 
 	lastInsertId, _ := result.LastInsertId()
@@ -90,12 +90,12 @@ func createCampaign(w http.ResponseWriter, r *http.Request) {
 	campaign, err := db.GetOneCampaign(r.Context(), int32(lastInsertId))
 	if err != nil {
 		http.Error(w, "Erreur lors de la récupération de la campagne créée :"+err.Error(), http.StatusInternalServerError)
-		return
+		return database.Campaign{}, err
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	newLine := campaignTemplate.CreatedCampaign(campaign)
-	newLine.Render(r.Context(), w)
+	return campaign, nil
+	// newLine := campaignTemplate.CreatedCampaign(campaign)
+	// newLine.Render(r.Context(), w)
 }
 
 func updateCampaign(w http.ResponseWriter, r *http.Request) {
@@ -169,6 +169,18 @@ func deleteCampaign(w http.ResponseWriter, r *http.Request) {
 }
 
 // Templates only routes
+func getCreateFirstCampaignTemplate(w http.ResponseWriter, r *http.Request) {
+	campaignTemplate.FirstCampaign().Render(r.Context(), w)
+}
+
+func createFirstCampaign(w http.ResponseWriter, r *http.Request) {
+	_, err := createCampaign(w, r)
+	if err != nil {
+		return
+	}
+
+	campaignTemplate.AppReRender().Render(r.Context(), w)
+}
 
 func getEditCampaignTemplate(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
