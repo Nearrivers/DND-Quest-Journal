@@ -52,8 +52,9 @@ templ FirstCampaign() {
  			required="true"
  			name="Name"
  			class="bg-transparent outline-none border border-neutral-700 rounded-md h-11 pl-2 mb-8"
+ 			autocomplete="off"
 		/>
-		<button class="flex gap-2 items-center pop-in-and-out mx-auto p-4 rounded-lg">
+		<button class="flex gap-2 font-bold items-center mx-auto p-4 rounded-lg border border-neutral-700">
 			<p>
 				Démarrer
 			</p>
@@ -83,9 +84,9 @@ templ OneCampaign(campaign database.Campaign) {
 }
 
 templ AllCampaigns(campaigns []database.Campaign) {
-	<aside class="w-1/5 max-h-max">
+	<aside class="w-1/5 max-h-[80svh]">
 		<ul class="pop-out rounded-lg p-4">
-			<li class="font-medium text-lg mb-4 flex justify-between items-center">
+			<li class="font-medium text-lg mb-4 flex justify-between items-center sticky">
 				Mes campagnes
 				<button
  					class="text-gray-300 rounded-lg w-11 h-11 pop-in-and-out"

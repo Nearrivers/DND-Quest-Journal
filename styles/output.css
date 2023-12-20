@@ -559,6 +559,10 @@ html {
   position: absolute !important;
 }
 
+.sticky {
+  position: sticky !important;
+}
+
 .left-1\/2 {
   left: 50% !important;
 }
@@ -608,9 +612,8 @@ html {
   height: 2.75rem !important;
 }
 
-.max-h-max {
-  max-height: -moz-max-content !important;
-  max-height: max-content !important;
+.max-h-\[80svh\] {
+  max-height: 80svh !important;
 }
 
 .w-1\/2 {
@@ -661,6 +664,14 @@ html {
 
 .gap-4 {
   gap: 1rem !important;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden !important;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll !important;
 }
 
 .rounded-lg {
@@ -800,6 +811,21 @@ html {
 .outline-none {
   outline: 2px solid transparent !important;
   outline-offset: 2px !important;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  /* IE and Edge */
+  scrollbar-width: none !important;
+  /* Firefox */
 }
 
 .hover\:bg-\[\#222222\]:hover {

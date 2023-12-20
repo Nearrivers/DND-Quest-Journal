@@ -15,8 +15,6 @@ import (
 	"github.com/gorilla/schema"
 )
 
-// CRUD Routes
-
 func getAllCampaigns(w http.ResponseWriter, r *http.Request) {
 	db := db.GetDbConnection()
 
@@ -145,11 +143,9 @@ func deleteCampaign(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusNoContent)
 	fmt.Fprint(w, "")
 }
 
-// Templates only routes
 func getCreateFirstCampaignTemplate(w http.ResponseWriter, r *http.Request) {
 	campaignTemplate.FirstCampaign().Render(r.Context(), w)
 }
