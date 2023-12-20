@@ -29,6 +29,16 @@ templ ObjectiveList(objectives []database.Objective) {
 	</ul>
 }
 
+templ CampaignQuestPlaceholder() {
+	<span
+ 		id="campaignQuest"
+ 		hx-get="/campaigns/crud/read"
+ 		hx-trigger="load"
+ 		hx-target="previous aside"
+ 		hx-swap="outerHTML"
+	></span>
+}
+
 templ CampaignTitle(campaign database.Campaign) {
 	<h2
  		class="font-medium text-xl"
@@ -61,7 +71,7 @@ templ CampaignQuests(campaign database.Campaign, quests []database.Quest) {
  					hx-delete={ fmt.Sprintf("/campaigns/crud/delete/%d", campaign.ID) }
  					hx-confirm="Souhaitez-vous vraiment supprimer cette campagne ?"
  					hx-target="#campaignQuest"
- 					hx-swap="innerHTML"
+ 					hx-swap="outerHTML"
 				>
 					<span class="material-symbols-outlined block">delete</span>
 				</button>

@@ -143,7 +143,7 @@ func deleteCampaign(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprint(w, "")
+	questTemplate.CampaignQuestPlaceholder().Render(r.Context(), w)
 }
 
 func getCreateFirstCampaignTemplate(w http.ResponseWriter, r *http.Request) {
