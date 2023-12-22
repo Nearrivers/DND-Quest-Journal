@@ -20,8 +20,8 @@ WHERE campaign_id = ? AND is_complete = true
 ORDER BY number;
 
 -- name: CreateQuest :execresult
-INSERT INTO quests (created_at, updated_at, name, description, npc, number, campaign_id)
-VALUES (?, ?, ?, ?, ?, ?, ?);
+INSERT INTO quests (created_at, updated_at, name, description, completed_description, npc, number, campaign_id)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
 -- name: UpdateQuest :execresult
 UPDATE quests SET name = ?, description = ?, npc = ?, updated_at = ?

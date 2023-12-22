@@ -16,6 +16,7 @@ CREATE TABLE quests (
   npc TEXT NOT NULL,
   is_complete BOOLEAN NOT NULL DEFAULT FALSE,
   is_active BOOLEAN NOT NULL DEFAULT FALSE,
+  completed_description LONGTEXT NOT NULL,
   number INT NOT NULL,
   campaign_id INT NOT NULL
 );

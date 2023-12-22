@@ -14,7 +14,7 @@ templ index() {
 			<script type="text/javascript" src="scripts/htmx.min.js"></script>
 		</head>
 		<body>
-			<main class="flex gap-4 p-4">
+			<main>
 				// Remplacé par AllCampaigns.templ
 				<span hx-get="/campaigns/crud/read" hx-trigger="load" hx-swap="outerHTML"></span>
 				// Remplacé par CampaignQuests.templ avec les quêtes de la campagne sélectionnée

@@ -1,0 +1,62 @@
+package objectiveTemplate
+
+import "github.com/Nearrivers/DND-quest-tracker/internal/database"
+
+// import "fmt"
+
+templ OneObjective(objective database.Objective) {
+	<li class="p-2">
+		<div class="flex items-center">
+			<span class="material-symbols-outlined text-sm mr-2">
+				emergency
+			</span>
+			<p>
+				{ objective.Name }
+			</p>
+		</div>
+		<p class="pt-2 pl-8">
+			<span class="opacity-80">
+				{ objective.Description }
+			</span>
+		</p>
+	</li>
+}
+
+templ ObjectiveList(questName string, objectives []database.Objective) {
+	<header class="flex items-center gap-6">
+		<h2 class="text-xl">
+			{ questName }
+		</h2>
+		<div class="flex gap-4 items-center">
+			<button
+ 				class="rounded-lg h-11"
+ 				hx-get=""
+ 				hx-target="previous h2"
+ 				hx-swap="outerHTML transition:true"
+			>
+				<span class="material-symbols-outlined block">
+					edit
+				</span>
+			</button>
+			<button
+ 				class="rounded-lg h-11"
+ 				hx-delete=""
+ 				hx-confirm="Souhaitez-vous vraiment supprimer cette campagne ?"
+ 				hx-target="#campaignQuest"
+ 				hx-swap="outerHTML transition:true"
+			>
+				<span class="material-symbols-outlined block">delete</span>
+			</button>
+		</div>
+	</header>
+	<section>
+		<h3 class="mt-4 text-lg">
+			Objectifs :
+		</h3>
+		<ul class="pl-2">
+			for _, goal := range objectives {
+				@OneObjective(goal)
+			}
+		</ul>
+	</section>
+}

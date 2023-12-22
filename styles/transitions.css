@@ -10,8 +10,18 @@
   }
 }
 
+@keyframes menu-slide {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
 .fade-it {
   view-transition-name: fade-it;
+}
+
+.fade-out-on-swap {
+  animation: fade-out .2s linear;
 }
 
 ::view-transition-old(fade-it) {
@@ -20,4 +30,12 @@
 
 ::view-transition-new(fade-it) {
   animation: 200ms cubic-bezier(0.4, 0, 1, 1) both fade-in;
+}
+
+#campaignMenu {
+  transition: all 1s ease-in-out;
+}
+
+#createCampaignButton {
+  transition: all 1s ease-in-out;
 }

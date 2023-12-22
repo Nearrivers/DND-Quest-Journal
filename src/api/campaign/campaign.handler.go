@@ -15,7 +15,8 @@ import (
 	"github.com/gorilla/schema"
 )
 
-func getAllCampaigns(w http.ResponseWriter, r *http.Request) {
+// Retourne le menu des campagnes fermé
+func getAllCampaignsMenuCollapsed(w http.ResponseWriter, r *http.Request) {
 	db := db.GetDbConnection()
 
 	campaings, err := db.GetAllCampaigns(r.Context())
@@ -28,28 +29,46 @@ func getAllCampaigns(w http.ResponseWriter, r *http.Request) {
 		noCampaign := campaignTemplate.NoCampaign()
 		noCampaign.Render(r.Context(), w)
 	} else {
-		allCampaings := campaignTemplate.AllCampaigns(campaings)
+		allCampaings := campaignTemplate.AllCampaignsMenuCollapsed(campaings)
+		allCampaings.Render(r.Context(), w)
+	}
+}
+
+func getAllCampaignsMenuExpanded(w http.ResponseWriter, r *http.Request) {
+	db := db.GetDbConnection()
+
+	campaings, err := db.GetAllCampaigns(r.Context())
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des campagnes : "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if len(campaings) == 0 {
+		noCampaign := campaignTemplate.NoCampaign()
+		noCampaign.Render(r.Context(), w)
+	} else {
+		allCampaings := campaignTemplate.AllCampaignsMenuExpanded(campaings)
 		allCampaings.Render(r.Context(), w)
 	}
 }
 
 func getOneCampaign(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(chi.URLParam(r, "id"))
-	if err != nil {
-		http.Error(w, "%v n'est pas reconnu", http.StatusBadRequest)
-		return
-	}
+	// id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	// if err != nil {
+	// 	http.Error(w, "%v n'est pas reconnu", http.StatusBadRequest)
+	// 	return
+	// }
 
-	db := db.GetDbConnection()
+	// db := db.GetDbConnection()
 
-	campaign, err := db.GetOneCampaign(r.Context(), int32(id))
-	if err != nil {
-		http.Error(w, "Erreur lors de la récupération d'une campagne :"+err.Error(), http.StatusInternalServerError)
-		return
-	}
+	// campaign, err := db.GetOneCampaign(r.Context(), int32(id))
+	// if err != nil {
+	// 	http.Error(w, "Erreur lors de la récupération d'une campagne :"+err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
 
-	campaignQuests := campaignTemplate.CampaignQuests(campaign)
-	campaignQuests.Render(r.Context(), w)
+	// campaignQuests := campaignTemplate.CampaignQuests(campaign)
+	// campaignQuests.Render(r.Context(), w)
 }
 
 func createCampaign(w http.ResponseWriter, r *http.Request) {

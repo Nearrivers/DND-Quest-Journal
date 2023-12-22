@@ -8,7 +8,7 @@ import (
 
 	"github.com/Nearrivers/DND-quest-tracker/internal/database"
 	db "github.com/Nearrivers/DND-quest-tracker/sql"
-	questTemplate "github.com/Nearrivers/DND-quest-tracker/src/templates/quest"
+	objectiveTemplate "github.com/Nearrivers/DND-quest-tracker/src/templates/objective"
 	"github.com/go-chi/chi"
 	"github.com/gorilla/schema"
 )
@@ -28,13 +28,15 @@ func GetAllQuestObjectives(w http.ResponseWriter, r *http.Request) {
 
 	db := db.GetDbConnection()
 
+	questName := r.URL.Query().Get("name")
+
 	objectives, err := db.GetAllQuestObjectives(r.Context(), int32(id))
 	if err != nil {
 		http.Error(w, "lecture des objectifs impossible :"+err.Error(), http.StatusNotFound)
 		return
 	}
 
-	questObjectives := questTemplate.ObjectiveList(objectives)
+	questObjectives := objectiveTemplate.ObjectiveList(questName, objectives)
 	questObjectives.Render(r.Context(), w)
 }
 
@@ -87,6 +89,6 @@ func CreateObjective(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	newLine := questTemplate.OneObjective(objective)
+	newLine := objectiveTemplate.OneObjective(objective)
 	newLine.Render(r.Context(), w)
 }

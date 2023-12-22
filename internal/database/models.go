@@ -28,14 +28,15 @@ type Objective struct {
 }
 
 type Quest struct {
-	ID          int32
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	Name        string
-	Description string
-	Npc         string
-	IsComplete  bool
-	IsActive    bool
-	Number      int32
-	CampaignID  int32
+	ID                   int32
+	CreatedAt            time.Time
+	UpdatedAt            time.Time
+	Name                 string
+	Description          string
+	Npc                  string
+	IsComplete           bool
+	IsActive             bool
+	CompletedDescription string
+	Number               int32
+	CampaignID           int32
 }

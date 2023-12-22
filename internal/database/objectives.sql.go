@@ -57,6 +57,7 @@ func (q *Queries) FinishObjective(ctx context.Context, id int32) (sql.Result, er
 const getAllQuestActiveObjectives = `-- name: GetAllQuestActiveObjectives :many
 SELECT id, created_at, updated_at, name, description, is_active, is_complete, number, quest_id from objectives
 WHERE quest_id = ? AND is_active = true
+ORDER BY number
 `
 
 func (q *Queries) GetAllQuestActiveObjectives(ctx context.Context, questID int32) ([]Objective, error) {
@@ -95,6 +96,7 @@ func (q *Queries) GetAllQuestActiveObjectives(ctx context.Context, questID int32
 const getAllQuestDoneObjectives = `-- name: GetAllQuestDoneObjectives :many
 SELECT id, created_at, updated_at, name, description, is_active, is_complete, number, quest_id from objectives
 WHERE quest_id = ? AND is_complete = true
+ORDER BY number
 `
 
 func (q *Queries) GetAllQuestDoneObjectives(ctx context.Context, questID int32) ([]Objective, error) {
@@ -133,6 +135,7 @@ func (q *Queries) GetAllQuestDoneObjectives(ctx context.Context, questID int32) 
 const getAllQuestObjectives = `-- name: GetAllQuestObjectives :many
 SELECT id, created_at, updated_at, name, description, is_active, is_complete, number, quest_id from objectives
 WHERE quest_id = ?
+ORDER BY number
 `
 
 func (q *Queries) GetAllQuestObjectives(ctx context.Context, questID int32) ([]Objective, error) {
@@ -170,7 +173,9 @@ func (q *Queries) GetAllQuestObjectives(ctx context.Context, questID int32) ([]O
 
 const getOneObjective = `-- name: GetOneObjective :one
 SELECT id, created_at, updated_at, name, description, is_active, is_complete, number, quest_id FROM objectives
-WHERE id = ? LIMIT 1
+WHERE id = ?
+ORDER BY number
+LIMIT 1
 `
 
 func (q *Queries) GetOneObjective(ctx context.Context, id int32) (Objective, error) {

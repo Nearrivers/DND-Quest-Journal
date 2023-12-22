@@ -3,61 +3,35 @@ package questTemplate
 import "github.com/Nearrivers/DND-quest-tracker/internal/database"
 import "fmt"
 
-templ OneObjective(objective database.Objective) {
-	<li class="p-2">
-		<div class="flex items-center">
-			<span class="material-symbols-outlined text-sm mr-2">
-				emergency
-			</span>
-			<p>
-				{ objective.Name }
-			</p>
-		</div>
-		<p class="pt-2 pl-8">
-			<span class="opacity-80">
-				{ objective.Description }
-			</span>
-		</p>
-	</li>
-}
-
-templ ObjectiveList(objectives []database.Objective) {
-	<ul class="pl-2">
-		for _, goal := range objectives {
-			@OneObjective(goal)
-		}
-	</ul>
-}
-
 templ CampaignQuestPlaceholder() {
 	<span
  		id="campaignQuest"
  		hx-get="/campaigns/crud/read"
  		hx-trigger="load"
  		hx-target="previous aside"
- 		hx-swap="outerHTML"
+ 		hx-swap="outerHTML transition:true"
 	></span>
 }
 
 templ CampaignTitle(campaign database.Campaign) {
 	<h2
- 		class="font-medium text-xl"
+ 		class="font-medium text-2xl animate-[fade-in_0.2s_linear]"
  		hx-get="/campaigns/crud/read"
  		hx-trigger="load"
  		hx-target="previous aside"
- 		hx-swap="outerHTML"
+ 		hx-swap="outerHTML transition:true"
 	>
 		{ campaign.Name }
 	</h2>
 }
 
 templ CampaignQuests(campaign database.Campaign, quests []database.Quest) {
-	<main class="w-4/5 rounded-lg p-4" id="campaignQuest">
+	<main class="absolute top-[72px] px-4 w-full" id="campaignQuest">
 		<header class="flex items-center justify-between mb-4">
 			@CampaignTitle(campaign)
-			<div class="flex gap-4">
+			<div class="flex gap-4 items-center">
 				<button
- 					class="text-gray-300 rounded-lg w-11 h-11 pop-in-and-out"
+ 					class="rounded-lg h-11"
  					hx-get={ fmt.Sprintf("/campaigns/template/edit/form/%d", campaign.ID) }
  					hx-target="previous h2"
  					hx-swap="outerHTML transition:true"
@@ -67,47 +41,47 @@ templ CampaignQuests(campaign database.Campaign, quests []database.Quest) {
 					</span>
 				</button>
 				<button
- 					class="text-red-400 rounded-lg w-11 h-11 pop-in-and-out"
+ 					class="rounded-lg h-11"
  					hx-delete={ fmt.Sprintf("/campaigns/crud/delete/%d", campaign.ID) }
  					hx-confirm="Souhaitez-vous vraiment supprimer cette campagne ?"
  					hx-target="#campaignQuest"
- 					hx-swap="outerHTML"
+ 					hx-swap="outerHTML transition:true"
 				>
 					<span class="material-symbols-outlined block">delete</span>
 				</button>
 			</div>
 		</header>
-		<section class="flex mb-4">
-			<button class="text-gray-300 rounded-lg pop-in-and-out flex items-center gap-2 px-2 py-3">
-				<span class="material-symbols-outlined block">
-					add
-				</span>
-				<p class="font-bold text-lg">
-					Créer une quête
-				</p>
-			</button>
-		</section>
-		<ul>
-			for _, quest := range quests {
-				<li
- 					class="pt-2 border-t border-t-neutral-700"
- 					hx-get={ fmt.Sprintf("/objectives/quest/%d", quest.ID) }
- 					hx-trigger="load"
- 					hx-target="#objectives"
- 					hx-swap="outerHTML"
-				>
-					<div class="flex items-center justify-between">
-						<p class="font-bold text-xl">
-							{ quest.Name }
-						</p>
-						<p>
-							{ quest.Npc }
-						</p>
-					</div>
-					<h3 class="font-medium mt-2">Objectifs :</h3>
-					<span id="objectives"></span>
+		<section class="flex gap-4 border-t border-t-neutral-700">
+			<ul class="w-1/4">
+				<li class="flex items-center pt-4 justify-between">
+					<h2 class="text-xl">
+						Quêtes
+					</h2>
+					<button class="text-neutral-200 bg-neutral-500 rounded-xl h-11 w-11">
+						<span class="material-symbols-outlined block">
+							add
+						</span>
+					</button>
 				</li>
-			}
-		</ul>
+				for _, quest := range quests {
+					<li class="pt-4 h-min">
+						<div class="flex gap-4 items-baseline justify-between">
+							<p
+ 								class="text-lg max-w-full text-ellipsis whitespace-nowrap"
+ 								hx-get={ fmt.Sprintf("/objectives/quest/%d?name=%s", quest.ID, quest.Name) }
+ 								hx-target="#objectives"
+ 								hx-swap="innerHTML transition:true"
+							>
+								{ quest.Name }
+							</p>
+						</div>
+					</li>
+				}
+			</ul>
+			<article
+ 				id="objectives"
+ 				class="pl-4 pt-4 border-l min-h-[70svh] border-l-neutral-700"
+			></article>
+		</section>
 	</main>
 }

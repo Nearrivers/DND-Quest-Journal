@@ -14,10 +14,11 @@ import (
 )
 
 type createQuestDto struct {
-	Name        string
-	Description string
-	Npc         string
-	Number      int32
+	Name                 string
+	Description          string
+	Npc                  string
+	Number               int32
+	CompletedDescription string
 }
 
 func GetCampaignQuests(w http.ResponseWriter, r *http.Request) {
@@ -72,13 +73,14 @@ func CreateQuest(w http.ResponseWriter, r *http.Request) {
 	db := db.GetDbConnection()
 
 	result, err := db.CreateQuest(r.Context(), database.CreateQuestParams{
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
-		Name:        newQuest.Name,
-		Npc:         newQuest.Npc,
-		Description: newQuest.Description,
-		Number:      newQuest.Number,
-		CampaignID:  int32(id),
+		CreatedAt:            time.Now().UTC(),
+		UpdatedAt:            time.Now().UTC(),
+		Name:                 newQuest.Name,
+		Npc:                  newQuest.Npc,
+		Description:          newQuest.Description,
+		Number:               newQuest.Number,
+		CompletedDescription: newQuest.CompletedDescription,
+		CampaignID:           int32(id),
 	})
 
 	if err != nil {
