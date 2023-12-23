@@ -1,0 +1,26 @@
+package questTemplate
+
+import "fmt"
+
+templ EditQuest(questId int32, questName string) {
+	<form
+ 		hx-put={ fmt.Sprintf("/quests/crud/update/%d", questId) }
+ 		hx-swap="outerHTML transition:true"
+ 		class="flex items-center gap-4 w-1/2"
+ 		enctype="multipart/form-data"
+	>
+		<input
+ 			class="rounded-md bg-transparent outline-none border border-neutral-700 font-medium text-xl w-3/4 h-11 pl-2"
+ 			placeholder={ questName }
+ 			name="Name"
+ 			id="Name"
+ 			autocomplete="off"
+ 			required="true"
+		/>
+		<button
+ 			class="text-green-300 rounded-lg w-11 h-11 pop-in-and-out"
+		>
+			<span class="material-symbols-outlined block">save</span>
+		</button>
+	</form>
+}

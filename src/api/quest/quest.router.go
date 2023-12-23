@@ -6,7 +6,7 @@ func ConfigureQuestRoutes() *chi.Mux {
 	router := chi.NewRouter()
 
 	router.Get("/campaign/{id}", GetCampaignQuests)
-	router.Post("/campaign/{id}", CreateQuest)
+	router.Post("/crud/create/campaign/{id}", CreateQuest)
 
 	return router
 }

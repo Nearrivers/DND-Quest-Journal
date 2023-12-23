@@ -25,6 +25,21 @@ templ CampaignTitle(campaign database.Campaign) {
 	</h2>
 }
 
+templ OneQuest(quest database.Quest) {
+	<li class="pt-4 h-min animate-[fade-in_0.2s_linear]">
+		<div class="flex gap-4 items-baseline justify-between">
+			<p
+ 				class="text-lg max-w-full text-ellipsis whitespace-nowrap"
+ 				hx-get={ fmt.Sprintf("/objectives/quest/%d?name=%s", quest.ID, quest.Name) }
+ 				hx-target="#objectives"
+ 				hx-swap="innerHTML transition:true"
+			>
+				{ quest.Name }
+			</p>
+		</div>
+	</li>
+}
+
 templ CampaignQuests(campaign database.Campaign, quests []database.Quest) {
 	<main class="absolute top-[72px] px-4 w-full" id="campaignQuest">
 		<header class="flex items-center justify-between mb-4">
@@ -57,25 +72,19 @@ templ CampaignQuests(campaign database.Campaign, quests []database.Quest) {
 					<h2 class="text-xl">
 						Quêtes
 					</h2>
-					<button class="text-neutral-200 bg-neutral-500 rounded-xl h-11 w-11">
+					<button
+ 						class="text-neutral-200 bg-neutral-500 rounded-xl h-11 w-11"
+ 						hx-post={ fmt.Sprintf("quests/crud/create/campaign/%d", campaign.ID) }
+ 						hx-target="closest ul"
+ 						hx-swap="beforeend"
+					>
 						<span class="material-symbols-outlined block">
 							add
 						</span>
 					</button>
 				</li>
 				for _, quest := range quests {
-					<li class="pt-4 h-min">
-						<div class="flex gap-4 items-baseline justify-between">
-							<p
- 								class="text-lg max-w-full text-ellipsis whitespace-nowrap"
- 								hx-get={ fmt.Sprintf("/objectives/quest/%d?name=%s", quest.ID, quest.Name) }
- 								hx-target="#objectives"
- 								hx-swap="innerHTML transition:true"
-							>
-								{ quest.Name }
-							</p>
-						</div>
-					</li>
+					@OneQuest(quest)
 				}
 			</ul>
 			<article

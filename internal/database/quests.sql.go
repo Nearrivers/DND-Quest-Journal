@@ -181,6 +181,18 @@ func (q *Queries) GetAllCampaignQuests(ctx context.Context, campaignID int32) ([
 	return items, nil
 }
 
+const getLastQuest = `-- name: GetLastQuest :one
+SELECT MAX(number) from quests
+WHERE campaign_id = ?
+`
+
+func (q *Queries) GetLastQuest(ctx context.Context, campaignID int32) (interface{}, error) {
+	row := q.db.QueryRowContext(ctx, getLastQuest, campaignID)
+	var max interface{}
+	err := row.Scan(&max)
+	return max, err
+}
+
 const getOneQuest = `-- name: GetOneQuest :one
 SELECT id, created_at, updated_at, name, description, npc, is_complete, is_active, completed_description, number, campaign_id from quests
 WHERE id = ?

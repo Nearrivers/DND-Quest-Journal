@@ -4,6 +4,11 @@ WHERE id = ?
 ORDER BY number
 LIMIT 1;
 
+-- name: GetLastQuest :one
+SELECT MAX(number) from quests
+WHERE campaign_id = ?;
+
+
 -- name: GetAllCampaignQuests :many
 SELECT * FROM quests
 WHERE campaign_id = ?
